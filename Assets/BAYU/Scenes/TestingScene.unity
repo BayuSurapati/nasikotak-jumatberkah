@@ -763,7 +763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 29290508}
   offset: {x: 0, y: 2, z: -5}
-  sensitivity: 0.3
+  sensitivity: 2
   minPitch: -30
   maxPitch: 60
   followSmoothSpeed: 10

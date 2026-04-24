@@ -1,5 +1,8 @@
+using System.Collections.Generic; // Wajib ditambahkan untuk menggunakan List
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerInteract : MonoBehaviour
 {
@@ -11,69 +14,146 @@ public class PlayerInteract : MonoBehaviour
     [Tooltip("Pilih Layer khusus barang yang bisa diambil")]
     public LayerMask itemLayer;
 
-    private GameObject currentItem;
-    private Rigidbody itemRb;
-    private Collider itemCollider;
+    [Header("Pengaturan Tumpukan (Stacking)")]
+    [Tooltip("Tinggi satu nasi kotak agar tumpukan selanjutnya pas di atasnya")]
+    public float boxHeight = 1f;
+    [Tooltip("Maksimal nasi kotak yang bisa dibawa Udin sekaligus")]
+    public int maxStack = 5;
 
-    // Fungsi otomatis dari New Input System saat tombol Interact ditekan
+
+    // Mengganti currentItem tunggal menjadi List untuk menyimpan banyak barang
+    private List<GameObject> carriedItems = new List<GameObject>();
+
     public void OnInteract(InputValue value)
     {
         if (value.isPressed)
         {
-            // Jika tangan kosong, coba ambil barang. Jika bawa barang, jatuhkan.
-            if (currentItem == null)
+            bool grabbedSomething = false;
+
+            // Jika tangan belum penuh, coba cari dan ambil barang
+            if (carriedItems.Count < maxStack)
             {
-                TryGrabItem();
+                grabbedSomething = TryGrabItem();
             }
-            else
+
+            // Jika kita menekan tombol tapi TIDAK ada barang yang bisa diambil 
+            // DAN kita sedang membawa barang, maka jatuhkan semuanya.
+            if (!grabbedSomething && carriedItems.Count > 0)
             {
-                DropItem();
+                DropTopItem();
             }
         }
     }
 
-    private void TryGrabItem()
+    private bool TryGrabItem()
     {
-        // Menentukan titik pusat pencarian (1 meter di depan Udin)
         Vector3 grabCenter = transform.position + transform.forward * 1f;
-
-        // Mencari semua objek dengan layer "Item" di dalam radius lingkaran
         Collider[] foundItems = Physics.OverlapSphere(grabCenter, grabRadius, itemLayer);
 
-        if (foundItems.Length > 0)
+        foreach (Collider col in foundItems)
         {
-            // Ambil barang pertama yang terdeteksi
-            currentItem = foundItems[0].gameObject;
-            itemRb = currentItem.GetComponent<Rigidbody>();
-            itemCollider = currentItem.GetComponent<Collider>();
+            GameObject item = col.gameObject;
 
-            // Matikan fisikanya agar tidak jatuh dan tidak nabrak kaki Udin
-            if (itemRb != null) itemRb.isKinematic = true;
-            if (itemCollider != null) itemCollider.enabled = false;
+            // Pastikan kita tidak mencoba mengambil barang yang SEDANG kita bawa
+            if (!carriedItems.Contains(item))
+            {
+                Rigidbody itemRb = item.GetComponent<Rigidbody>();
+                Collider itemCollider = item.GetComponent<Collider>();
 
-            // Pindahkan barang ke tangan Udin dan jadikan 'Anak' (Parenting)
-            currentItem.transform.position = holdPoint.position;
-            currentItem.transform.rotation = holdPoint.rotation;
-            currentItem.transform.SetParent(holdPoint);
+                if (itemRb != null) itemRb.isKinematic = true;
+                if (itemCollider != null) itemCollider.enabled = false;
+
+                // LOGIKA TUMPUKAN: Hitung posisi Y ke atas berdasarkan jumlah barang yang sudah dibawa
+                float currentHeightOffset = carriedItems.Count * boxHeight;
+
+                // Posisikan barang baru di atas tumpukan sebelumnya
+                item.transform.position = holdPoint.position + (Vector3.up * currentHeightOffset);
+                item.transform.rotation = holdPoint.rotation;
+                item.transform.SetParent(holdPoint);
+
+                // Tambahkan ke daftar barang bawaan
+                carriedItems.Add(item);
+
+                return true; // Berhasil mengambil 1 barang baru, hentikan pencarian
+            }
         }
+
+        return false; // Tidak ada barang baru di sekitar yang bisa diambil
     }
 
-    private void DropItem()
+    private void DropTopItem()
     {
-        // Lepaskan barang dari tangan Udin
-        currentItem.transform.SetParent(null);
+        // 1. Cari tahu indeks kotak paling atas (yaitu kotak terakhir yang ditambahkan ke List)
+        int topIndex = carriedItems.Count - 1;
 
-        // Nyalakan kembali fisikanya agar barang jatuh ke tanah
+        // 2. Ambil referensi objek kotaknya
+        GameObject topItem = carriedItems[topIndex];
+
+        // 3. Lepaskan dari tangan Udin
+        topItem.transform.SetParent(null);
+
+        // (Opsional) Agar kotak tidak jatuh persis di dalam tubuh Udin, kita geser sedikit ke depan
+        topItem.transform.position = transform.position + transform.forward * 1f + Vector3.up * 0.5f;
+
+        // 4. Nyalakan kembali fisikanya agar jatuh ke tanah
+        Rigidbody itemRb = topItem.GetComponent<Rigidbody>();
+        Collider itemCollider = topItem.GetComponent<Collider>();
+
         if (itemRb != null) itemRb.isKinematic = false;
         if (itemCollider != null) itemCollider.enabled = true;
 
-        // Kosongkan memori tangan Udin
-        currentItem = null;
-        itemRb = null;
-        itemCollider = null;
+        // 5. Hapus kotak tersebut dari daftar bawaan Udin
+        carriedItems.RemoveAt(topIndex);
     }
 
-    // Fitur tambahan agar Anda bisa melihat area jangkauan tangan Udin berupa bola kuning di Unity Editor
+    public bool HasItem()
+    {
+        return carriedItems.Count > 0;
+    }
+
+    public void GiveTopItem(Transform receiverHoldPoint)
+    {
+        int topIndex = carriedItems.Count - 1;
+        GameObject topItem = carriedItems[topIndex];
+
+        topItem.transform.SetParent(receiverHoldPoint);
+        topItem.transform.position = receiverHoldPoint.position;
+        topItem.transform.rotation = receiverHoldPoint.rotation;
+
+        carriedItems.RemoveAt(topIndex);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore(1);
+        }
+        else
+        {
+            Debug.LogWarning("Game Manager tidak ditemukan.");
+        }
+    }
+
+    private void DropAllItems()
+    {
+        // Jatuhkan semua barang yang ada di dalam List
+        foreach (GameObject item in carriedItems)
+        {
+            if (item != null)
+            {
+                item.transform.SetParent(null);
+
+                Rigidbody itemRb = item.GetComponent<Rigidbody>();
+                Collider itemCollider = item.GetComponent<Collider>();
+
+                // Nyalakan fisika agar tumpukannya jatuh berhamburan ke tanah
+                if (itemRb != null) itemRb.isKinematic = false;
+                if (itemCollider != null) itemCollider.enabled = true;
+            }
+        }
+
+        // Kosongkan daftar bawaan Udin
+        carriedItems.Clear();
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
