@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform cameraTransform;
+    [Tooltip("Masukkan Model 3D Udin")]
+    [SerializeField] private Animator _animator;
 
     // Components
     private CharacterController _controller;
@@ -85,6 +87,14 @@ public class PlayerMovement : MonoBehaviour
     private void HandleMovement()
     {
         float currentSpeed = _sprintInput ? sprintSpeed : moveSpeed;
+
+        //Update Animasi
+        float animationSpeed = _moveInput.magnitude * currentSpeed;
+
+        if(_animator != null)
+        {
+            _animator.SetFloat("Speed", animationSpeed);
+        }
 
         if (_moveInput == Vector2.zero)
             return;

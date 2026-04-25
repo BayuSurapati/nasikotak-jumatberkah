@@ -8,6 +8,9 @@ public class NPC_PenerimaNasi : MonoBehaviour
     [Tooltip("Titik Kosong di tangan penerima untuk memegang nasi kotak")]
     public Transform holdPoint;
 
+    [Tooltip("Masukkan Child 3D yang ada animatornya")]
+    public Animator animator;
+
     private bool _sudahDapatNasi = false;
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,16 @@ public class NPC_PenerimaNasi : MonoBehaviour
             {
                 player.GiveTopItem(holdPoint);
                 _sudahDapatNasi = true;
+
+                if(animator != null)
+                {
+                    animator.SetBool("IsHappy", true);
+                }
+                else
+                {
+                    Debug.Log("Animator belum dimasukkan");
+                }
+
                 Debug.Log("Terimakasih");
             }
         }
