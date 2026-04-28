@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(CharacterController))]
@@ -14,6 +15,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpHeight = 1.5f;
     [SerializeField] private float gravity = -15f;
 
+    [Header("Stamina System")]
+    [SerializeField] private float maxStamina = 100f;
+    [Tooltip("Berapa banyak stamina yang berkurang per detik saat sprint")]
+    [SerializeField] private float staminaDrainRate = 30f;
+    [Tooltip("Berapa banyak stamina yang pulih per detik saat tidak sprint")]
+    [SerializeField] private float staminaRegenRate = 10f;
+    [Tooltip("waktu tunggu sebelum stamina mulai pulih setelah sprint")]
+    [SerializeField] private float regenDelay = 0.5f;
+
     [Header("References")]
     [SerializeField] private Transform cameraTransform;
     [Tooltip("Masukkan Model 3D Udin")]
@@ -28,11 +38,24 @@ public class PlayerMovement : MonoBehaviour
     private bool _jumpInput;
     private bool _sprintInput;
 
-    // State
+    // State & Stamina
     private Vector3 _velocity;
     private float _targetRotation;
     private float _rotationVelocity;
     private bool _isGrounded;
+
+    private float _currentStamina;
+    private float _regenTimer;
+    private bool _isSprinting;
+    private bool _isExhausted;
+
+    //Variable Boost
+    private float _originalMoveSpeed;
+    private float _originalSprintSpeed;
+    private Coroutine _boostCoroutine;
+
+    //Stun Effects
+    private bool _isStunned = false;
 
     private void Awake()
     {
@@ -42,6 +65,12 @@ public class PlayerMovement : MonoBehaviour
         // Auto-assign main camera jika tidak di-set manual
         if (cameraTransform == null)
             cameraTransform = Camera.main.transform;
+
+        _currentStamina = maxStamina;
+
+        //Simpan kecepatan movement asli
+        _originalMoveSpeed = moveSpeed;
+        _originalSprintSpeed = sprintSpeed;
     }
 
     // ── Input callbacks (dipanggil oleh PlayerInput component) ──────────────
@@ -59,6 +88,11 @@ public class PlayerMovement : MonoBehaviour
     public void OnSprint(InputValue value)
     {
         _sprintInput = value.isPressed;
+
+        if (!_sprintInput)
+        {
+            _isExhausted = false;
+        }
     }
 
     // ── Update ───────────────────────────────────────────────────────────────
@@ -66,8 +100,71 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         HandleGravity();
+        HandleStamina();
         HandleMovement();
     }
+
+    // --- Applied Boost ----------------------------------------
+    public void ApplySpeedBoost(float multiplier, float duration)
+    {
+        if(_boostCoroutine != null)
+        {
+            StopCoroutine(_boostCoroutine);
+        }
+        _boostCoroutine = StartCoroutine(SpeedBoostRoutine(multiplier, duration));
+    }
+
+    private IEnumerator SpeedBoostRoutine (float multiplier, float duration)
+    {
+        Debug.Log("Boost Aktif");
+
+        //Double the speed
+        moveSpeed = _originalMoveSpeed * multiplier;
+        sprintSpeed = _originalSprintSpeed * multiplier;
+
+        //Stamina Maxed
+        _currentStamina = maxStamina;
+        _isExhausted = false;
+
+        //Wait Duration
+        yield return new WaitForSeconds(duration);
+
+        //Normal Speed
+        moveSpeed = _originalMoveSpeed;
+        sprintSpeed = _originalSprintSpeed;
+
+        Debug.Log("Boost Selesai");
+    }
+
+    //-------------Stun Effects------------------
+    public void GetStunned(float duration)
+    {
+        if (!_isStunned)
+        {
+            StartCoroutine(StunRoutine(duration));
+        }
+    }
+
+    public IEnumerator StunRoutine(float duration)
+    {
+        _isStunned = true;
+        _isSprinting = false;
+
+        //Reset input
+        _moveInput = Vector2.zero;
+
+        Debug.Log("Player Stunned");
+
+        //Jalankan Animasi Stun
+
+        yield return new WaitForSeconds(duration);
+        _isStunned = false;
+
+        Debug.Log("Stun Selesai");
+    }
+
+
+    //HANDLER --------------------------------
 
     private void HandleGravity()
     {
@@ -84,9 +181,50 @@ public class PlayerMovement : MonoBehaviour
         _controller.Move(_velocity * Time.deltaTime);
     }
 
+    private void HandleStamina()
+    {
+        bool tryingToSprint = _sprintInput && _moveInput != Vector2.zero && !_isExhausted;
+
+        if(tryingToSprint && _currentStamina > 0f)
+        {
+            _isSprinting = true;
+
+            //kurangi stamina perlahan
+            _currentStamina -= staminaDrainRate * Time.deltaTime;
+            _regenTimer = 0f;
+
+            if(_currentStamina <= 0f)
+            {
+                _currentStamina = 0f;
+                _isSprinting = false;
+                _isExhausted = true;
+            }
+        }
+        else
+        {
+            _isSprinting = false;
+
+            //Pemulihan stamina
+            if(_currentStamina < maxStamina)
+            {
+                _regenTimer += Time.deltaTime;
+
+                if(_regenTimer >= regenDelay)
+                {
+                    _currentStamina += staminaRegenRate * Time.deltaTime;
+
+                    if(_currentStamina > maxStamina)
+                    {
+                        _currentStamina = maxStamina;
+                    }
+                }
+            }
+        }
+    }
+
     private void HandleMovement()
     {
-        float currentSpeed = _sprintInput ? sprintSpeed : moveSpeed;
+        float currentSpeed = _isSprinting ? sprintSpeed : moveSpeed;
 
         //Update Animasi
         float animationSpeed = _moveInput.magnitude * currentSpeed;
@@ -97,6 +235,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         if (_moveInput == Vector2.zero)
+            return;
+
+        if (_isStunned) 
             return;
 
         // Arah gerak relatif terhadap kamera

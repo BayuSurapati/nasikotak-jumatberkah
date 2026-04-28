@@ -25,7 +25,7 @@
                 },
                 {
                     "name": "Sprint",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "6bf1b2f8-2b77-425b-9846-0b77aeb1b4d0",
                     "expectedControlType": "",
                     "processors": "",

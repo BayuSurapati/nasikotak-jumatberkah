@@ -175,6 +175,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5968573672231933621}
+  - component: {fileID: 1016758226870486461}
+  - component: {fileID: 8672600749796497428}
   m_Layer: 0
   m_Name: Gelas-EsTeh
   m_TagString: Untagged
@@ -190,7 +192,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5610905144056382907}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0.13511714, w: 0.99082965}
+  m_LocalRotation: {x: 0, y: 0, z: -0.13511895, w: 0.9908294}
   m_LocalPosition: {x: 233.76, y: 1.77, z: 71.94}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 1
@@ -199,6 +201,41 @@ Transform:
   - {fileID: 8336107467505953986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -15.531}
+--- !u!65 &1016758226870486461
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610905144056382907}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.31284, y: 4.5015316, z: 2.7789564}
+  m_Center: {x: 0.024461834, y: -0.79122937, z: 0.02857228}
+--- !u!114 &8672600749796497428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5610905144056382907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6f255c609116894d95fb416159c70f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedMultiplier: 2
+  boostDuration: 2
 --- !u!1 &7540516089226298801
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,6 +328,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8336107467505953986}
+  - component: {fileID: 6204151457345903154}
   m_Layer: 0
   m_Name: Object
   m_TagString: Untagged
@@ -316,6 +354,27 @@ Transform:
   - {fileID: 8437644259036424166}
   m_Father: {fileID: 5968573672231933621}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6204151457345903154
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8278111034480626169}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e750cb9dad0f87f40a807d26f3ab8d42, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &6777706771906673547
 PrefabInstance:
   m_ObjectHideFlags: 0
