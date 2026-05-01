@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float slowSpeed = 2f;
     [SerializeField] private float sprintSpeed = 9f;
     [SerializeField] private float rotationSmoothTime = 0.1f;
 
@@ -56,6 +57,11 @@ public class PlayerMovement : MonoBehaviour
 
     //Stun Effects
     private bool _isStunned = false;
+    private Vector3 _impact = Vector3.zero;
+    [SerializeField] private float knockBackForce = 15f;
+
+    //SlowSpeedEffects
+    public bool _isInWater = false;
 
     private void Awake()
     {
@@ -102,6 +108,8 @@ public class PlayerMovement : MonoBehaviour
         HandleGravity();
         HandleStamina();
         HandleMovement();
+
+        KnockBack();
     }
 
     // --- Applied Boost ----------------------------------------
@@ -137,12 +145,29 @@ public class PlayerMovement : MonoBehaviour
     }
 
     //-------------Stun Effects------------------
-    public void GetStunned(float duration)
+    public void GetStunned(float duration, Vector3 sourcePosition)
     {
         if (!_isStunned)
         {
             StartCoroutine(StunRoutine(duration));
+
+            //Hitung arah menjauh dari enemy
+            Vector3 pushDirection = (transform.position- sourcePosition).normalized;
+            pushDirection.y = 0.2f;
+
+            //Kekuatan knockback
+            _impact = pushDirection * knockBackForce;
         }
+    }
+
+    private void KnockBack()
+    {
+        if(_impact.magnitude > 0.2f)
+        {
+            _controller.Move(_impact * Time.deltaTime);
+        }
+        _impact = Vector3.Lerp(_impact, Vector3.zero, 5f * Time.deltaTime);
+
     }
 
     public IEnumerator StunRoutine(float duration)
@@ -157,12 +182,22 @@ public class PlayerMovement : MonoBehaviour
 
         //Jalankan Animasi Stun
 
+
         yield return new WaitForSeconds(duration);
         _isStunned = false;
 
         Debug.Log("Stun Selesai");
     }
 
+    //------- Slow Speed Effects -------------
+    public void EnterWater()
+    {
+        _isInWater = true;
+    }
+    public void ExitWater()
+    {
+        _isInWater = false;
+    }
 
     //HANDLER --------------------------------
 
@@ -183,7 +218,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleStamina()
     {
-        bool tryingToSprint = _sprintInput && _moveInput != Vector2.zero && !_isExhausted;
+        bool tryingToSprint = _sprintInput && _moveInput != Vector2.zero && !_isExhausted && !_isInWater;
 
         if(tryingToSprint && _currentStamina > 0f)
         {
@@ -224,7 +259,25 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        float currentSpeed = _isSprinting ? sprintSpeed : moveSpeed;
+        if (_isStunned)
+        {
+            if(_animator != null)
+            {
+                _animator.SetFloat("Speed", 0f);
+                return;
+            }
+        }
+
+        float currentSpeed = moveSpeed;
+
+        if(_isInWater)
+        {
+            currentSpeed = slowSpeed;
+        }
+        else if(_isSprinting)
+        {
+            currentSpeed = sprintSpeed;
+        }
 
         //Update Animasi
         float animationSpeed = _moveInput.magnitude * currentSpeed;

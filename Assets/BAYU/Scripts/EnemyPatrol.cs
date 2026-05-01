@@ -57,7 +57,7 @@ public class EnemyPatrol : MonoBehaviour
             PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
             if(playerMovement != null)
             {
-                playerMovement.GetStunned(stunDuration);
+                playerMovement.GetStunned(stunDuration, transform.position);
             }
         }
     }

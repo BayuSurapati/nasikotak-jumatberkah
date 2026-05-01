@@ -161,8 +161,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.1819506, z: 2.0380478}
-  m_Center: {x: 0, y: 0.5909755, z: 0.029262543}
+  m_Size: {x: 1, y: 1.1617868, z: 2.0380478}
+  m_Center: {x: 0, y: 1.1010574, z: 0.029262543}
 --- !u!114 &2012054300823379940
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,7 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 296d95167b06d16448d191c90db40bfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypoints: []
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
   moveSpeed: 3
   rotationSpeed: 10
   stunDuration: 2
@@ -190,6 +192,7 @@ GameObject:
   - component: {fileID: 8442807896297688976}
   - component: {fileID: 594883172692519408}
   - component: {fileID: 6751271443274777330}
+  - component: {fileID: 5965193709921047531}
   m_Layer: 0
   m_Name: Badan
   m_TagString: Untagged
@@ -262,3 +265,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &5965193709921047531
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6511607764163265779}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a2286d8b23b924c4ab6166d9ad098a0e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
