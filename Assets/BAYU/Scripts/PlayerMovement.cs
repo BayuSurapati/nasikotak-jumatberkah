@@ -100,11 +100,31 @@ public class PlayerMovement : MonoBehaviour
             _isExhausted = false;
         }
     }
+    
+    public void OnRestart(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            if(GameManager.Instance != null)
+            {
+                GameManager.Instance.RestartLevel();
+            }
+        }
+    }
 
     // ── Update ───────────────────────────────────────────────────────────────
 
     private void Update()
     {
+        if(GameManager.Instance != null && !GameManager.Instance.isGameActive)
+        {
+            if(_animator != null)
+            {
+                _animator.SetFloat("Speed", 0f);
+            }
+            return;
+        } 
+
         HandleGravity();
         HandleStamina();
         HandleMovement();
