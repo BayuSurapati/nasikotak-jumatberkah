@@ -19,6 +19,8 @@ public class PlayerInteract : MonoBehaviour
     public float boxHeight = 1f;
     [Tooltip("Maksimal nasi kotak yang bisa dibawa Udin sekaligus")]
     public int maxStack = 5;
+    [SerializeField]
+    private GameObject pp;
 
 
     // Mengganti currentItem tunggal menjadi List untuk menyimpan banyak barang
@@ -34,6 +36,7 @@ public class PlayerInteract : MonoBehaviour
             if (carriedItems.Count < maxStack)
             {
                 grabbedSomething = TryGrabItem();
+                
             }
 
             // Jika kita menekan tombol tapi TIDAK ada barang yang bisa diambil 
@@ -42,6 +45,18 @@ public class PlayerInteract : MonoBehaviour
             {
                 DropTopItem();
             }
+        }
+    }
+
+    public void CheckItemCount()
+    {
+        if(carriedItems.Count <= 0)
+        {
+            pp.SetActive(true);
+        }
+        else if(carriedItems.Count > 0)
+        {
+            pp.SetActive(false);
         }
     }
 

@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    [Header("Target Nasi Kotak")]
+    public int targetNasiKotak = 10;
+    private int _nasiKotakTerkirim = 0;
+
     [Header("Statistik Permainan")]
     public int totalScore = 0;
     public float timeRemaining = 60f;
@@ -15,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Reference")]
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI misiText;
 
     private void Awake()
     {
@@ -42,6 +47,24 @@ public class GameManager : MonoBehaviour
     public void CheatCode()
     {
 
+    }
+
+    public void NasiKotakDelivered()
+    {
+        if(!isGameActive)
+        {
+            return;
+        }
+        _nasiKotakTerkirim++;
+
+        UpdateMisiDisplay();
+
+        Debug.Log("Nasi Kotak Terkirim: " + _nasiKotakTerkirim + " / " + targetNasiKotak);
+
+        if (_nasiKotakTerkirim >= targetNasiKotak)
+        {
+            GameWin();
+        }
     }
 
     public void TimeRemaining()
@@ -80,6 +103,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UpdateMisiDisplay()
+    {
+        if (misiText != null)
+        {
+            misiText.text = "Nasi Terkirim: " + _nasiKotakTerkirim + " / " + targetNasiKotak;
+        }
+    }
+
     public void AddScore(int amount)
     {
         totalScore += amount;
@@ -89,6 +120,12 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over");
+    }
+
+    public void GameWin()
+    {
+        Debug.Log("Game Win");
+        Time.timeScale = 0f;
     }
 
     public void RestartLevel()
