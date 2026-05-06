@@ -49,11 +49,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 49.3
+      value: 48.01
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalRotation.x
@@ -61,7 +61,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalRotation.z
@@ -73,7 +73,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -83,9 +83,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Body
       objectReference: {fileID: 0}
+    - target: {fileID: -3215555783603854218, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: -1018664272722485354, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_Name
       value: Head
+      objectReference: {fileID: 0}
+    - target: {fileID: -1018664272722485354, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_Name
@@ -95,6 +103,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6317578925029434746, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e97d1b70f652e04438f35721ba119857, type: 2}
+    - target: {fileID: 6829333093618665122, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e619bb7bc0fd81f43bdb185efce6aa17, type: 2}
     - target: {fileID: 8632055958874330854, guid: 205a587f106ead54390c4e6c099c7fe0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -296,7 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 20
-  slowSpeed: 2
+  slowSpeed: 10
   sprintSpeed: 40
   rotationSmoothTime: 0.1
   jumpHeight: 1.5
@@ -308,6 +324,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 0}
   _animator: {fileID: 5873057026746973529}
   knockBackForce: 50
+  _isInWater: 0
 --- !u!114 &8636806186114080916
 MonoBehaviour:
   m_ObjectHideFlags: 0

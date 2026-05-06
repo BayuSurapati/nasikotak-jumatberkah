@@ -275,6 +275,7 @@ GameObject:
   - component: {fileID: 6051089916319738403}
   - component: {fileID: 5960062022356099282}
   - component: {fileID: 8962549026111393223}
+  - component: {fileID: 4752079600545185209}
   m_Layer: 0
   m_Name: Badan
   m_TagString: Untagged
@@ -347,6 +348,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &4752079600545185209
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6057354355175929759}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 212370497460711607, guid: ddfe0f07ac3e69f4faaf07fe94251c8f, type: 3}
 --- !u!1 &7590705428962952906
 GameObject:
   m_ObjectHideFlags: 0
