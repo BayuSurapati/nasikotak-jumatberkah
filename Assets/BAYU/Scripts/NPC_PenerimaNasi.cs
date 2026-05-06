@@ -31,8 +31,9 @@ public class NPC_PenerimaNasi : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             PlayerInteract player = other.GetComponent<PlayerInteract>();
+            GameManager.Instance.NasiKotakDelivered();
 
-            if(player != null && player.HasItem())
+            if (player != null && player.HasItem())
             {
                 player.GiveTopItem(holdPoint);
                 _sudahDapatNasi = true;
