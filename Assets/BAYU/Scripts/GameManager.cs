@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
     {
         if (misiText != null)
         {
-            misiText.text = "Nasi Terkirim: " + _nasiKotakTerkirim + " / " + targetNasiKotak;
+            misiText.text =+ _nasiKotakTerkirim + " / " + targetNasiKotak;
         }
     }
 
