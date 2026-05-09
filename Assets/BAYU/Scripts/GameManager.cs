@@ -34,13 +34,12 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         TimeRemaining();
@@ -49,6 +48,12 @@ public class GameManager : MonoBehaviour
     public void CheatCode()
     {
 
+    }
+
+    // FUNGSI BARU UNTUK LEVEL END UI (Menyelesaikan Error 1)
+    public int getNasiKotakTerkirim()
+    {
+        return _nasiKotakTerkirim;
     }
 
     public void NasiKotakDelivered()
@@ -63,10 +68,8 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("Nasi Kotak Terkirim: " + _nasiKotakTerkirim + " / " + targetNasiKotak);
 
-        if (_nasiKotakTerkirim >= targetNasiKotak)
-        {
-            GameWin();
-        }
+        // Langsung cek kondisi menang untuk memunculkan hint (Menyelesaikan Error 2)
+        CheckWinCondition();
     }
 
     public void TimeRemaining()
@@ -109,7 +112,7 @@ public class GameManager : MonoBehaviour
     {
         if (misiText != null)
         {
-            misiText.text =+ _nasiKotakTerkirim + " / " + targetNasiKotak;
+            misiText.text = _nasiKotakTerkirim + " / " + targetNasiKotak;
         }
     }
 
@@ -121,26 +124,10 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-    isGameActive = false;
-    canCountdown = false;
-    Debug.Log("Game Over");
-    LevelEndUI.Instance.ShowLosePanel(_nasiKotakTerkirim, targetNasiKotak, "Waktu Habis!");
-    }
-
-    public void GameWin()
-    {
-        if (!isGameActive) return;
-        
         isGameActive = false;
         canCountdown = false;
-        Debug.Log("Game Win");
-        
-        // Panggil UI Win
-        float timeUsed = 60f - timeRemaining; // Asumsi total waktu 60s
-        LevelEndUI.Instance.ShowWinPanel(_nasiKotakTerkirim, targetNasiKotak, timeRemaining);
-        
-        // Jangan pause timeScale dulu agar animasi UI bisa jalan, 
-        // atau gunakan .SetUpdate(true) di DOTween
+        Debug.Log("Game Over");
+        LevelEndUI.Instance.ShowLosePanel(_nasiKotakTerkirim, targetNasiKotak, "Waktu Habis!");
     }
 
     public void RestartLevel()
@@ -149,5 +136,50 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         string currentSceneName = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentSceneName);
+    }
+
+    // ===== ALUR ENDGAME =====
+    public void CheckWinCondition()
+    {
+        if (_nasiKotakTerkirim >= targetNasiKotak)
+        {
+            // Panggil persiapan untuk lapor Ustadz (Bukan lagi memanggil Panel Win)
+            PrepareEndGame();
+        }
+    }
+
+    private void PrepareEndGame()
+    {
+        // Matikan timer agar waktu berhenti saat target tercapai
+        canCountdown = false; 
+
+        // --- TAMBAHAN PENTING: PAKSA UNFREEZE PLAYER ---
+        // Memastikan Waluyo tidak nyangkut/freeze dan bisa jalan ke Masjid
+        isGameActive = true;
+        Time.timeScale = 1f;
+
+        PlayerMovement player = FindObjectOfType<PlayerMovement>();
+        if (player != null) player.enabled = true;
+
+        CameraController cam = FindObjectOfType<CameraController>();
+        if (cam != null) cam.enabled = true;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        // -----------------------------------------------
+
+        // Munculkan Hint bahwa misi sukses dan harus kembali
+        if (HintManager.Instance != null)
+            HintManager.Instance.ShowSpecificHint("Alhamdulillah semua nasi terbagi! Ayo lapor ke Pak Ustadz di Masjid.");
+
+        // Nyalakan trigger dialog akhir di masjid
+        DialogueTrigger[] triggers = FindObjectsOfType<DialogueTrigger>(true);
+        foreach (DialogueTrigger dt in triggers)
+        {
+            if (dt.isEndGameTrigger)
+            {
+                dt.gameObject.SetActive(true);
+            }
+        }
     }
 }

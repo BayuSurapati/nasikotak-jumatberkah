@@ -132,22 +132,37 @@ public class DialogueSystem : MonoBehaviour
         _dialoguePanel.DOScale(Vector3.zero, 0.4f).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
             _dialoguePanel.gameObject.SetActive(false);
             
-            // CEK APAKAH INI DIALOG ENDGAME
+            // CEK APAKAH INI DIALOG ENDGAME (SAMA PAK USTADZ)
             if (_isEndGame)
             {
-                // Jika iya, panggil UI Final dari LevelEndUI
+                // Jika iya, panggil UI Win Panel
                 if (LevelEndUI.Instance != null)
                 {
-                    LevelEndUI.Instance.ShowFinalCompletePanel();
+                    LevelEndUI.Instance.ShowWinPanel();
                 }
             }
             else
             {
-                // Jika bukan, kembalikan kontrol ke player seperti biasa
-                if (GameManager.Instance != null) GameManager.Instance.isGameActive = true;
+                // JIKA BUKAN ENDGAME (DIALOG AWAL)
+                // --- KEMBALIKAN SEMUA KONTROL PLAYER DI SINI ---
                 
+                Time.timeScale = 1f;
+
+                if (GameManager.Instance != null) 
+                {
+                    GameManager.Instance.isGameActive = true;
+                }
+                
+                // Kembalikan pergerakan karakter
                 PlayerMovement player = FindObjectOfType<PlayerMovement>();
                 if (player != null) player.enabled = true;
+
+                // Kembalikan kamera dan sembunyikan kursor
+                CameraController cam = FindObjectOfType<CameraController>();
+                if (cam != null) cam.enabled = true;
+
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
             }
         });
     }
