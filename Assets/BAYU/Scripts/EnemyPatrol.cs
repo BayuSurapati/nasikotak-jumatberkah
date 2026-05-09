@@ -12,6 +12,10 @@ public class EnemyPatrol : MonoBehaviour
     [Header("Pengaturan Efek Stun")]
     public float stunDuration = 2f;
 
+    [Header("Pengaturan UI/Animasi")]
+    [SerializeField, Tooltip("Masukkan objek tanda seru (!) yang memiliki script ChickenAlertPopup")]
+    private ChickenAlertPopup _alertPopup;
+
     private int _currentWayPointIndex = 0;
     // Start is called before the first frame update
     void Start()
@@ -54,11 +58,17 @@ public class EnemyPatrol : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            //Alert PopUp
+            if (_alertPopup != null)
+            {
+                _alertPopup.TriggerAlert();
+            }
             PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
             if(playerMovement != null)
             {
                 playerMovement.GetStunned(stunDuration, transform.position);
             }
         }
-    }
+    }    
 }
+

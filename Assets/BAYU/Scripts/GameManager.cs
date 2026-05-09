@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI timerText;
     public TextMeshProUGUI misiText;
 
+    [HideInInspector] public bool canCountdown = true;
+
     private void Awake()
     {
         if(Instance == null)
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
 
     public void TimeRemaining()
     {
-        if (isGameActive)
+        if (isGameActive && canCountdown)
         {
             if(timeRemaining > 0)
             {
@@ -107,7 +109,7 @@ public class GameManager : MonoBehaviour
     {
         if (misiText != null)
         {
-            misiText.text = "Nasi Terkirim: " + _nasiKotakTerkirim + " / " + targetNasiKotak;
+            misiText.text =+ _nasiKotakTerkirim + " / " + targetNasiKotak;
         }
     }
 
@@ -119,13 +121,26 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        Debug.Log("Game Over");
+    isGameActive = false;
+    canCountdown = false;
+    Debug.Log("Game Over");
+    LevelEndUI.Instance.ShowLosePanel(_nasiKotakTerkirim, targetNasiKotak, "Waktu Habis!");
     }
 
     public void GameWin()
     {
+        if (!isGameActive) return;
+        
+        isGameActive = false;
+        canCountdown = false;
         Debug.Log("Game Win");
-        Time.timeScale = 0f;
+        
+        // Panggil UI Win
+        float timeUsed = 60f - timeRemaining; // Asumsi total waktu 60s
+        LevelEndUI.Instance.ShowWinPanel(_nasiKotakTerkirim, targetNasiKotak, timeRemaining);
+        
+        // Jangan pause timeScale dulu agar animasi UI bisa jalan, 
+        // atau gunakan .SetUpdate(true) di DOTween
     }
 
     public void RestartLevel()
