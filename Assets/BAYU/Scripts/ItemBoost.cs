@@ -9,6 +9,8 @@ public class ItemBoost : MonoBehaviour
     public float speedMultiplier = 2f;
     [Tooltip("Durasi efek")]
     public float boostDuration = 2f;
+    [Header("Stamina Refill")]
+    [SerializeField] private float _staminaRefillAmount = 50f;
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,7 @@ public class ItemBoost : MonoBehaviour
             if (playerMovement != null)
             {
                 playerMovement.ApplySpeedBoost(speedMultiplier, boostDuration);
+                playerMovement.RefillStamina(_staminaRefillAmount);
                 Destroy(gameObject);
             }
         }

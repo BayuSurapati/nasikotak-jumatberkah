@@ -195,7 +195,7 @@ public class MainMenuAnimator : MonoBehaviour
 
         // 4. Papan jatuh dari atas (saat tiang setengah jalan)
         AnimateSignDrop();
-        yield return new WaitForSeconds(signDropDuration + 0.15f);
+        yield return new WaitForSeconds(signDropDuration + 0.5f);
 
         // 5. Tombol slide dari kanan
         yield return StartCoroutine(AnimateButtonsSlideIn());

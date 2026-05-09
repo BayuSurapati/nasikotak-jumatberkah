@@ -30,6 +30,9 @@ public class PlayerMovement : MonoBehaviour
     [Tooltip("Masukkan Model 3D Udin")]
     [SerializeField] private Animator _animator;
 
+    [Header("Referensi UI")]
+    [SerializeField] private StaminaBarHUD _staminaHUD;
+
     // Components
     private CharacterController _controller;
     private PlayerInput _playerInput;
@@ -67,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _controller = GetComponent<CharacterController>();
         _playerInput = GetComponent<PlayerInput>();
+        _staminaHUD = FindObjectOfType<StaminaBarHUD>();
 
         // Auto-assign main camera jika tidak di-set manual
         if (cameraTransform == null)
@@ -77,6 +81,8 @@ public class PlayerMovement : MonoBehaviour
         //Simpan kecepatan movement asli
         _originalMoveSpeed = moveSpeed;
         _originalSprintSpeed = sprintSpeed;
+        _currentStamina = maxStamina;
+    if (_staminaHUD != null) _staminaHUD.UpdateStaminaBar(_currentStamina, maxStamina);
     }
 
     // ── Input callbacks (dipanggil oleh PlayerInput component) ──────────────
@@ -127,9 +133,54 @@ public class PlayerMovement : MonoBehaviour
 
         HandleGravity();
         HandleStamina();
+        UpdateStamina();
         HandleMovement();
 
         KnockBack();
+    }
+
+    private void UpdateStamina()
+    {
+        // 1. JIKA SEDANG LARI: Kurangi stamina
+        if (_isSprinting && _moveInput != Vector2.zero)
+        {
+            _currentStamina -= staminaDrainRate * Time.deltaTime;
+            _regenTimer = 0f; // Reset timer regen agar tidak ngisi saat lari
+            
+            if (_currentStamina <= 0)
+            {
+                _currentStamina = 0;
+                _isSprinting = false; // Memaksa Udin berhenti lari
+            }
+        }
+        // 2. JIKA TIDAK LARI: Isi ulang stamina
+        else
+        {
+            if (_currentStamina < maxStamina)
+            {
+                // Tambah timer delay-nya dulu
+                _regenTimer += Time.deltaTime;
+                
+                // Jika sudah melewati delay, mulai isi staminanya
+                if (_regenTimer >= regenDelay)
+                {
+                    _currentStamina += staminaRegenRate * Time.deltaTime;
+                    
+                    // Pastikan tidak bocor melebihi batas maksimal
+                    if (_currentStamina > maxStamina)
+                    {
+                        _currentStamina = maxStamina;
+                    }
+                }
+            }
+        }
+
+        // 3. Selalu kirim data terbaru ke HUD setiap frame 
+        // (agar UI bisa bergerak naik dengan mulus saat regen)
+        if (_staminaHUD != null)
+        {
+            _staminaHUD.UpdateStaminaBar(_currentStamina, maxStamina);
+        }
     }
 
     // --- Applied Boost ----------------------------------------
@@ -163,6 +214,12 @@ public class PlayerMovement : MonoBehaviour
 
         Debug.Log("Boost Selesai");
     }
+
+    public void RefillStamina(float amount)
+{
+    _currentStamina = Mathf.Min(_currentStamina + amount, maxStamina);
+    if (_staminaHUD != null) _staminaHUD.UpdateStaminaBar(_currentStamina, maxStamina);
+}
 
     //-------------Stun Effects------------------
     public void GetStunned(float duration, Vector3 sourcePosition)

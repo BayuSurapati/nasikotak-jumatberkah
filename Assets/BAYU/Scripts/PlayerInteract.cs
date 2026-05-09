@@ -89,6 +89,11 @@ public class PlayerInteract : MonoBehaviour
                 // Tambahkan ke daftar barang bawaan
                 carriedItems.Add(item);
 
+                if (HintManager.Instance != null)
+                {
+                    HintManager.Instance.HideHint();
+                }
+
                 return true; // Berhasil mengambil 1 barang baru, hentikan pencarian
             }
         }
@@ -140,6 +145,13 @@ public class PlayerInteract : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.AddScore(1);
+        }
+        if (carriedItems.Count == 0)
+        {
+            if (HintManager.Instance != null)
+            {
+                HintManager.Instance.ShowHint();
+            }
         }
         else
         {
