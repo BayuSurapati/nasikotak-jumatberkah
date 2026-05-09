@@ -74,9 +74,12 @@ public class DialogueSystem : MonoBehaviour
         _currentSentence = currentLine.sentence;
 
         HandleIconVisibility(currentLine.isWaluyo);
-
+        
         StopAllCoroutines();
         StartCoroutine(TypeSentence(_currentSentence));
+        
+        AudioManager.instance.PlayDialog("Dialog");
+
     }
 
     private void HandleIconVisibility(bool isWaluyoTalk)
@@ -121,6 +124,7 @@ public class DialogueSystem : MonoBehaviour
 
         _isTyping = false;
         _cancelTyping = false;
+        AudioManager.instance.StopDialog();
     }
 
     public void EndDialogue()

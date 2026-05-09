@@ -119,6 +119,7 @@ public class NPC_PenerimaNasi : MonoBehaviour
                 player.GiveTopItem(holdPoint);
                 _sudahDapatNasi = true;
                 GameManager.Instance.NasiKotakDelivered();
+                AudioManager.instance.PlaySFX("Nasi Kotak");
                 if (animator != null)
                 {
                     animator.SetBool("IsHappy", true);

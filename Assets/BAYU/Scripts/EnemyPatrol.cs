@@ -58,6 +58,7 @@ public class EnemyPatrol : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AudioManager.instance.PlaySFX("Ayam Stun");
             //Alert PopUp
             if (_alertPopup != null)
             {

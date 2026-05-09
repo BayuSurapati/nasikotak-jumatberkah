@@ -27,6 +27,7 @@ public class ItemBoost : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            AudioManager.instance.PlaySFX("Es Teh");
             PlayerMovement playerMovement = other.GetComponent<PlayerMovement>();
 
             if (playerMovement != null)

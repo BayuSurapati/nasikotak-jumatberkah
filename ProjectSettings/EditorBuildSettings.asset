@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/BAYU/Scenes/Playables/LD-1.unity
+    guid: 8a815697336cdc24b8fbf85c78c3d862
+  - enabled: 1
+    path: Assets/BAYU/Scenes/Playables/Main Menu.unity
+    guid: 69652c052799fed469e5764f722e62d0
   m_configObjects: {}
