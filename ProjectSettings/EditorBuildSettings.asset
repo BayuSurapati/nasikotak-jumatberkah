@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Reyhan/Scene/Main Menu.unity
+    guid: f6cb5dd87221f644babf0f8ea4d8e840
+  - enabled: 1
+    path: Assets/Reyhan/Scene/Cutscene.unity
+    guid: bef453efb3a70b74788586a0429913c3
+  - enabled: 1
+    path: Assets/BAYU/Scenes/Playables/LD-1.unity
+    guid: 8a815697336cdc24b8fbf85c78c3d862
   m_configObjects: {}
