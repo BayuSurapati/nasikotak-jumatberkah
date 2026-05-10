@@ -88,6 +88,7 @@ public class PlayerInteract : MonoBehaviour
 
                 // Tambahkan ke daftar barang bawaan
                 carriedItems.Add(item);
+                AudioManager.instance.PlaySFX("Interact");
 
                 if (HintManager.Instance != null)
                 {

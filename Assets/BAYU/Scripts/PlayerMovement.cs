@@ -296,8 +296,8 @@ public class PlayerMovement : MonoBehaviour
     private void HandleStamina()
     {
         bool tryingToSprint = _sprintInput && _moveInput != Vector2.zero && !_isExhausted && !_isInWater;
-
-        if(tryingToSprint && _currentStamina > 0f)
+        
+        if (tryingToSprint && _currentStamina > 0f)
         {
             _isSprinting = true;
 

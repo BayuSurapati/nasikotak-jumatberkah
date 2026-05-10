@@ -2399,9 +2399,6 @@ MonoBehaviour:
   _loseNasiTerkirimText: {fileID: 564063336}
   _loseKekuranganText: {fileID: 1332365730}
   _losePesanGagalText: {fileID: 0}
-  _finalPanelContainer: {fileID: 620297136}
-  _finalBackgroundOverlay: {fileID: 1021988368}
-  _finalNoteContent: {fileID: 394086851}
   _fadeDuration: 0.4
   _noteDuration: 0.5
   _targetBgAlpha: 0.8
@@ -7053,7 +7050,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139395370708730708, guid: 1a306d86b4ccc79428b95458dfa141ce, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -43.100006
+      value: -43.82
       objectReference: {fileID: 0}
     - target: {fileID: 6139395370708730708, guid: 1a306d86b4ccc79428b95458dfa141ce, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7061,7 +7058,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6139395370708730708, guid: 1a306d86b4ccc79428b95458dfa141ce, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.520004
+      value: -34.59
       objectReference: {fileID: 0}
     - target: {fileID: 6139395370708730708, guid: 1a306d86b4ccc79428b95458dfa141ce, type: 3}
       propertyPath: m_LocalRotation.w
@@ -18423,7 +18420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3809450173029951521, guid: 10346d4c9cbd896438238b8e4b845707, type: 3}
       propertyPath: timeRemaining
-      value: 180
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 4056212366827453553, guid: 10346d4c9cbd896438238b8e4b845707, type: 3}
       propertyPath: m_Name

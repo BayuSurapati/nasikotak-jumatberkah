@@ -45,5 +45,13 @@ public class MainMenuManager : MonoBehaviour
             Debug.LogError("CreditUI belum dipasang di Inspector MainMenuManager!");
         }
     }
+
+    public void StartSFXButton()
+    {
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX("Button Click");
+        }
+    }
 }
 

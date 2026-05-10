@@ -95,6 +95,8 @@ public class LevelEndUI : MonoBehaviour
         EnableUICursorAndPause();
         _winPanelContainer.SetActive(true);
 
+        AudioManager.instance.PlaySFX("Win");
+
         // FAILSAFE 3: Paksa CanvasGroup agar bisa diklik (jika ada)
         CanvasGroup cg = _winPanelContainer.GetComponent<CanvasGroup>();
         if (cg != null)
@@ -131,6 +133,8 @@ public class LevelEndUI : MonoBehaviour
         EnableUICursorAndPause();
         _losePanelContainer.SetActive(true);
 
+        AudioManager.instance.PlaySFX("Lose");
+
         // FAILSAFE 3: Paksa CanvasGroup agar bisa diklik (jika ada)
         CanvasGroup cg = _losePanelContainer.GetComponent<CanvasGroup>();
         if (cg != null)
@@ -156,7 +160,7 @@ public class LevelEndUI : MonoBehaviour
     public void OnNextClicked()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Main Menu");
     }
 
     public void OnRetryClicked()

@@ -135,6 +135,7 @@ public class DialogueSystem : MonoBehaviour
             // CEK APAKAH INI DIALOG ENDGAME (SAMA PAK USTADZ)
             if (_isEndGame)
             {
+                AudioManager.instance.StopMusic();
                 // Jika iya, panggil UI Win Panel
                 if (LevelEndUI.Instance != null)
                 {
@@ -147,6 +148,8 @@ public class DialogueSystem : MonoBehaviour
                 // --- KEMBALIKAN SEMUA KONTROL PLAYER DI SINI ---
                 
                 Time.timeScale = 1f;
+
+                AudioManager.instance.PlayMusic("Gameplay");
 
                 if (GameManager.Instance != null) 
                 {
