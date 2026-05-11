@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 using DG.Tweening;
 
 public class DialogueSystem : MonoBehaviour
@@ -19,6 +20,9 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField] private float _typewriterSpeed = 0.05f;
     [SerializeField] private float _wiggleAngle = 10f;
     [SerializeField] private float _bobAmount = 15f;
+
+    [Header("Input System")]
+    [SerializeField] private InputActionReference _interactAction;
 
     private Queue<DialogueLine> _sentences = new Queue<DialogueLine>();
     private bool _isTyping = false;
@@ -172,7 +176,7 @@ public class DialogueSystem : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+        if (_interactAction != null && _interactAction.action.WasPressedThisFrame())
         {
             // Pastikan panel dialog sedang aktif sebelum memproses input
             if (!_dialoguePanel.gameObject.activeSelf) return;
